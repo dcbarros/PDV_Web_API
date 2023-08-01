@@ -37,20 +37,27 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<?> createNewProduct(ProductRequest request){
-        
-        String productCode = genCode(100);
-        if(productCode == "-1"){return ResponseEntity.internalServerError().body(new MessageResponse("Error: Número de tentativas de geração de código do produto foram superadas."));}
+    public ResponseEntity<?> createProducts(List<ProductRequest> requestList){
+        List<Product> productList = new ArrayList<>();
+        for (ProductRequest request : requestList) {
+            String productCode = genCode(100);
+            if(productCode == "-1"){
+                return ResponseEntity.internalServerError().body(new MessageResponse("Error: Número de tentativas de geração de código do produto foram superadas."));
+            }
 
-        Product product = new Product(request.getName(), 
-                            request.getDescription(), 
-                            request.getType(), 
-                            request.getPrice(), 
-                            productCode, 
-                            request.getStock());
+            Product product = new Product(request.getName(), 
+                                request.getDescription(), 
+                                request.getType(), 
+                                request.getPrice(), 
+                                productCode, 
+                                request.getStock());
 
-        _productRepository.save(product);
-        return ResponseEntity.ok(new MessageResponse("Produto cadastrado!"));
+            productList.add(product);
+
+        }
+
+        _productRepository.saveAll(productList);
+        return ResponseEntity.ok(new MessageResponse("Produtos cadastrados!"));
     }
 
     public ResponseEntity<?> getAllProducts(){

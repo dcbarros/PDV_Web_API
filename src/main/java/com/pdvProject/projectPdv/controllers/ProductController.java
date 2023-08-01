@@ -1,5 +1,6 @@
 package com.pdvProject.projectPdv.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest request){
-        return _productService.createNewProduct(request);
+    public ResponseEntity<?> addProduct(@Valid @RequestBody List<ProductRequest> request){
+        return _productService.createProducts(request);
     }
 
     @GetMapping("/search/getAll")
@@ -65,4 +66,5 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId){
         return _productService.softDeleteProduct(productId);
     }
+    
 }
